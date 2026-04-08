@@ -1,4 +1,5 @@
-import { Routes, Route } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
+import MainLayout from '../Layout/MainLayout';
 import MainPage from '../pages/MainPage';
 import LoginPage from '../pages/LoginPage';
 import SignUpPage from '../pages/SignUpPage';
@@ -10,21 +11,20 @@ import CreateCoursePage from '../pages/CreateCoursePage';
 import EditCoursePage from '../pages/EditCoursePage';
 import QuizAnalyticsPage from '../pages/QuizAnalyticsPage';
 
-const Router = () => {
-  return (
-    <Routes>
-      <Route path="/" element={<MainPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/signup" element={<SignUpPage />} />
-      <Route path="/my-courses" element={<MyCoursesPage />} />
-      <Route path="/courses" element={<CourseCatalogPage />} />
-      <Route path="/courses/:id" element={<CourseDetailPage />} />
-      <Route path="/mistake-notes" element={<MistakeNotesPage />} />
-      <Route path="/create-course" element={<CreateCoursePage />} />
-      <Route path="/courses/:id/edit" element={<EditCoursePage />} />
-      <Route path="/quiz-analytics" element={<QuizAnalyticsPage />} />
-    </Routes>
-  );
-};
-
-export default Router;
+export const Router = createBrowserRouter([
+  {
+    element: <MainLayout />,
+    children: [
+      { path: '/', element: <MainPage /> },
+      { path: '/login', element: <LoginPage /> },
+      { path: '/signup', element: <SignUpPage /> },
+      { path: '/my-courses', element: <MyCoursesPage /> },
+      { path: '/courses', element: <CourseCatalogPage /> },
+      { path: '/courses/:id', element: <CourseDetailPage /> },
+      { path: '/mistake-notes', element: <MistakeNotesPage /> },
+      { path: '/create-course', element: <CreateCoursePage /> },
+      { path: '/courses/:id/edit', element: <EditCoursePage /> },
+      { path: '/quiz-analytics', element: <QuizAnalyticsPage /> },
+    ],
+  },
+]);
