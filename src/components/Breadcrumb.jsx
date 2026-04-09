@@ -5,20 +5,20 @@ const Breadcrumb = () => {
   const crumbs = matches.filter((match) => match.handle?.breadcrumb);
 
   return (
-    <nav className="flex items-center gap-1 text-sm text-gray-500">
+    <nav className="flex items-center gap-1">
       {crumbs.map((crumb, index) => (
-        <span key={crumb.id} className="flex items-center gap-1">
+        <p key={crumb.id} className="flex items-center gap-1">
           {index < crumbs.length - 1 ? (
             <>
-              <Link to={crumb.pathname} className="hover:text-gray-800">
+              <Link to={crumb.pathname} style={{ color: 'var(--base-100)' }}>
                 {crumb.handle.breadcrumb}
               </Link>
-              <span>&gt;</span>
+              <span style={{ color: 'var(--base-300)' }}>&gt;</span>
             </>
           ) : (
-            <span>{crumb.handle.breadcrumb}</span>
+            <span style={{ color: 'var(--text-main)' }}>{crumb.handle.breadcrumb}</span>
           )}
-        </span>
+        </p>
       ))}
     </nav>
   );
