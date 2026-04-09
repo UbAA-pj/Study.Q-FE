@@ -1,6 +1,15 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
 @import 'tailwindcss';
 
+@theme {
+  --color-primary: var(--primary);
+  --color-logo: var(--logo);
+  --color-text-main: var(--text-main);
+  --color-base-100: var(--base-100);
+  --color-base-200: var(--base-200);
+  --color-base-300: var(--base-300);
+}
+
 :root {
   /* Font Family */
   --font-main: 'Pretendard', sans-serif;
