@@ -34,11 +34,11 @@
 
   /* Color Palette */
   --text-main: #1a1a1a;
-  --primary: #7135ca;
   --logo: #4d00c0;
-  --base-100: #e4e4e4;
-  --base-200: #cccccc;
-  --base-300: #999999;
+  --primary: #7135ca;
+  --base-100: #4e4e4e;
+  --base-200: #999999;
+  --base-300: #cccccc;
 }
 
 body {
