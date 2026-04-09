@@ -1,10 +1,14 @@
 const CourseCard = ({ image, title, author }) => {
   return (
-    <div className="flex flex-col gap-2 cursor-pointer">
-      <img src={image} alt={title} className="w-full aspect-square object-cover rounded-md" />
+    <div className="w-65 h-65 flex flex-col gap-2 cursor-pointer">
+      <img
+        src={image}
+        alt={title}
+        className="w-65 h-42.5 aspect-square object-cover rounded-md"
+      />
       <div>
-        <p className="font-semibold text-sm">{title}</p>
-        <p className="text-xs text-gray-400">{author}</p>
+        <h3>{title}</h3>
+        <small>{author}</small>
       </div>
     </div>
   );

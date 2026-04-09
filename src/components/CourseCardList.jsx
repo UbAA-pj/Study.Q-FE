@@ -2,7 +2,7 @@ import CourseCard from './CourseCard';
 
 const CourseCardList = ({ courses }) => {
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="flex flex-wrap p-9 justify-between">
       {courses.map((course) => (
         <CourseCard
           key={course.id}
