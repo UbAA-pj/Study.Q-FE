@@ -1,4 +1,4 @@
-import LectureList from '../components/LectureList';
+import LectureList from '../components/common/course/LectureList';
 import { DUMMY_COURSES } from '../data/courses';
 
 const CourseCatalogPage = () => {

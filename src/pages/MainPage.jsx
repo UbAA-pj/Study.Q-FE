@@ -1,4 +1,4 @@
-import CourseCardList from '../components/CourseCardList';
+import CourseCardList from '../components/common/course/CourseCardList';
 import { DUMMY_COURSES } from '../data/courses';
 
 const MainPage = () => {
