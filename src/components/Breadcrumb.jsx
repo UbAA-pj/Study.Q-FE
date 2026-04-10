@@ -2,6 +2,9 @@ import { Link, useMatches } from 'react-router-dom';
 
 const Breadcrumb = () => {
   const matches = useMatches();
+
+  if (matches.some((match) => match.handle?.hideBreadcrumb)) return null;
+
   const crumbs = matches.filter((match) => match.handle?.breadcrumb);
 
   return (
@@ -16,7 +19,9 @@ const Breadcrumb = () => {
               <span style={{ color: 'var(--base-300)' }}>&gt;</span>
             </>
           ) : (
-            <span style={{ color: 'var(--text-main)' }}>{crumb.handle.breadcrumb}</span>
+            <Link to={crumb.pathname} reloadDocument style={{ color: 'var(--text-main)' }}>
+              {crumb.handle.breadcrumb}
+            </Link>
           )}
         </p>
       ))}

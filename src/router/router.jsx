@@ -17,8 +17,8 @@ export const Router = createBrowserRouter([
     handle: { breadcrumb: 'Study.Q' },
     children: [
       { path: '/', element: <MainPage /> },
-      { path: '/login', element: <LoginPage />, handle: { breadcrumb: '로그인' } },
-      { path: '/signup', element: <SignUpPage />, handle: { breadcrumb: '회원가입' } },
+      { path: '/login', element: <LoginPage />, handle: { hideBreadcrumb: true } },
+      { path: '/signup', element: <SignUpPage />, handle: { hideBreadcrumb: true } },
       { path: '/my-courses', element: <MyCoursesPage />, handle: { breadcrumb: '수강 목록' } },
       { path: '/courses', element: <CourseCatalogPage />, handle: { breadcrumb: '강의 목록' } },
       { path: '/courses/:id', element: <CourseDetailPage />, handle: { breadcrumb: '강의 상세' } },
