@@ -2,9 +2,13 @@ import { Pencil, Trash2 } from 'lucide-react';
 
 const LectureItem = ({ lecture }) => {
   return (
-    <li className="flex items-center justify-between hover:bg-base-300">
+    <li className="flex items-center justify-between hover:bg-base-300/30 rounded-xl">
       <div className="flex items-center gap-4">
-        <img src={lecture.image} alt={lecture.title} className="w-35 h-21 object-cover rounded-[5px]" />
+        <img
+          src={lecture.image}
+          alt={lecture.title}
+          className="w-35 h-21 object-cover rounded-md"
+        />
         <div className="flex flex-col gap-1">
           <h4>{lecture.title}</h4>
           <small className="text-base-200">{lecture.date}</small>
