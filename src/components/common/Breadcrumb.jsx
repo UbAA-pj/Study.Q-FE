@@ -8,7 +8,7 @@ const Breadcrumb = () => {
   const crumbs = matches.filter((match) => match.handle?.breadcrumb);
 
   return (
-    <nav className="flex items-center gap-1">
+    <nav className="flex items-center gap-1 px-3 py-1">
       {crumbs.map((crumb, index) => (
         <p key={crumb.id} className="flex items-center gap-1">
           {index < crumbs.length - 1 ? (
