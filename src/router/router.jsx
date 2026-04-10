@@ -16,7 +16,11 @@ export const Router = createBrowserRouter([
     element: <MainLayout />,
     handle: { breadcrumb: 'Study.Q' },
     children: [
-      { path: '/', element: <MainPage /> },
+      { 
+        path: '/', 
+        element: <MainPage />,
+        handle: { hideBreadcrumb: true }
+      },
       {
         path: '/auth/login',
         element: <LoginPage />,
