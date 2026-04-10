@@ -6,7 +6,7 @@ export default function Button({
   ...props
 }) {
   const baseStyle =
-    'inline-flex items-center justify-center gap-2 py-3 px-3 rounded-lg transition-colors text-white';
+    'inline-flex items-center justify-center gap-2 py-3 px-3 rounded-lg transition-colors text-white cursor-pointer';
 
   const variantStyle = {
     natural: loading ? 'bg-base-300' : 'bg-base-200 hover:bg-base-100/80',
