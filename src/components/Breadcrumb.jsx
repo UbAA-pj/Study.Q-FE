@@ -13,13 +13,13 @@ const Breadcrumb = () => {
         <p key={crumb.id} className="flex items-center gap-1">
           {index < crumbs.length - 1 ? (
             <>
-              <Link to={crumb.pathname} style={{ color: 'var(--base-100)' }}>
+              <Link to={crumb.pathname} className="text-base-100">
                 {crumb.handle.breadcrumb}
               </Link>
-              <span style={{ color: 'var(--base-300)' }}>&gt;</span>
+              <span className="text-base-100">&gt;</span>
             </>
           ) : (
-            <Link to={crumb.pathname} reloadDocument style={{ color: 'var(--text-main)' }}>
+            <Link to={crumb.pathname} reloadDocument className="text-text-main">
               {crumb.handle.breadcrumb}
             </Link>
           )}
