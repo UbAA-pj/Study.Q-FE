@@ -10,8 +10,46 @@ const TABS = [
 
 const SignUpPage = () => {
   const [tab, setTab] = useState('student');
-  const [password, setPassword] = useState('');
   const [showPw, setShowPw] = useState(false);
+  const [form, setForm] = useState({
+    email: '',
+    password: '',
+    userId: '',
+    nickname: '',
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const validate = () => {
+    const newErrors = {};
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email))
+      newErrors.email = '이메일 형식이 올바르지 않습니다';
+
+    const passwordRegex =
+      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(form.password))
+      newErrors.password = '8자 이상, 영문/숫자/특수문자 포함';
+
+    const userIdRegex = /^[a-zA-Z0-9]{4,10}$/;
+    if (!userIdRegex.test(form.userId)) newErrors.userId = '영문, 숫자 4~10자';
+
+    const nicknameRegex = /^[a-zA-Z0-9가-힣]{2,10}$/;
+    if (!nicknameRegex.test(form.nickname)) newErrors.nickname = '2~10자 입력';
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = () => {
+    if (!validate()) return;
+    // API 호출
+  };
 
   return (
     <div className="flex flex-col items-center my-15">
@@ -41,39 +79,69 @@ const SignUpPage = () => {
         <div className="px-10 py-4">
           <p className="w-full text-base-100">e-mail</p>
           <input
+            name="email"
             type="email"
+            value={form.email}
+            onChange={handleChange}
+            placeholder="이메일을 입력해주세요."
             className="w-140 h-10 border-b border-base-300 focus:outline-none focus:ring-0"
           />
+          {errors.email && <p className="text-red-400">{errors.email}</p>}
         </div>
 
         <div className="px-10 py-4">
           <p className="w-full text-base-100">pw</p>
           <div className="w-140 h-10 border-b border-base-300">
             <input
+              name="password"
               type={showPw ? 'text' : 'password'}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={form.password}
+              onChange={handleChange}
+              placeholder="비밀번호를 입력해주세요."
               className="w-134 h-10 focus:outline-none focus:ring-0"
             />
             <button onClick={() => setShowPw((v) => !v)}>
               {showPw ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
+          {errors.password && <p className="text-red-400">{errors.password}</p>}
+        </div>
+
+        <div className="px-10 py-4">
+          <p className="w-full text-base-100">user ID</p>
+          <div className="w-140 h-10 border-b border-base-300">
+            <input
+              name="userId"
+              type="text"
+              value={form.userId}
+              onChange={handleChange}
+              placeholder="영문, 숫자 4~10자"
+              className="w-134 h-10 focus:outline-none focus:ring-0"
+            />
+          </div>
+          {errors.userId && <p className="text-red-400">{errors.userId}</p>}
         </div>
 
         <div className="px-10 py-4">
           <p className="w-full text-base-100">Nickname</p>
           <input
+            name="nickname"
             type="text"
+            value={form.nickname}
+            onChange={handleChange}
+            placeholder="닉네임을 입력해주세요."
             className="w-140 h-10 border-b border-base-300 focus:outline-none focus:ring-0"
           />
+          {errors.nickname && <p className="text-red-400">{errors.nickname}</p>}
         </div>
 
         <div className="flex justify-between items-end px-5 py-4">
           <Link to="/auth/login" className="text-base-100 hover:underline">
             {`< 로그인 페이지로 이동`}
           </Link>
-          <Button variant="primary">로그인</Button>
+          <Button variant="primary" onClick={handleSubmit}>
+            회원가입
+          </Button>
         </div>
       </div>
     </div>
