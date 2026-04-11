@@ -62,6 +62,14 @@ const SignUpPage = () => {
         </div>
 
         <div className="px-10 py-4">
+          <p className="w-full text-base-100">user ID</p>
+          <input
+            type="text"
+            className="w-140 h-10 border-b border-base-300 focus:outline-none focus:ring-0"
+          />
+        </div>
+
+        <div className="px-10 py-4">
           <p className="w-full text-base-100">Nickname</p>
           <input
             type="text"
