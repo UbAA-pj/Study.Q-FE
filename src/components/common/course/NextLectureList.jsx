@@ -14,7 +14,7 @@ const NextLectureItem = ({ lecture, isActive }) => {
 const NextLectureList = ({ lectures, activeId }) => {
   return (
     <div>
-      <span className="block text-xs mb-3">다음 강의</span>
+      <span className="block text-xs text-base-100 mb-3">다음 강의</span>
       <ul className="flex flex-col gap-3">
         {lectures.map((lecture) => (
           <NextLectureItem key={lecture.id} lecture={lecture} isActive={lecture.id === activeId} />
