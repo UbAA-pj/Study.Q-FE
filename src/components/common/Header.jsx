@@ -3,6 +3,7 @@ import { Settings } from 'lucide-react';
 import { useState } from 'react';
 import useAuth from '../../hook/useAuth';
 import DeleteAccountModal from './DeleteAccountModal';
+import { ROUTES } from '../../constants/routes';
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -41,10 +42,10 @@ export default function Header() {
       <nav className="flex items-center gap-2">
         {role === 'student' && (
           <>
-            <Link to="/my-courses">
+            <Link to={ROUTES.MY_COURSES}>
               <h4 className={linkStyle}>수강 목록</h4>
             </Link>
-            <Link to="/mistake-notes">
+            <Link to={ROUTES.MISTAKE_NOTES}>
               <h4 className={linkStyle}>오답 노트</h4>
             </Link>
           </>
@@ -52,13 +53,13 @@ export default function Header() {
 
         {role === 'instructor' && (
           <>
-            <Link to="/create-course">
+            <Link to={ROUTES.CREATE_COURSE}>
               <h4 className={linkStyle}>강의 생성</h4>
             </Link>
-            <Link to="/my-courses">
+            <Link to={ROUTES.MY_COURSES}>
               <h4 className={linkStyle}>강의 목록</h4>
             </Link>
-            <Link to="/quiz-analytics">
+            <Link to={ROUTES.QUIZ_ANALYTICS}>
               <h4 className={linkStyle}>퀴즈 통계</h4>
             </Link>
           </>
