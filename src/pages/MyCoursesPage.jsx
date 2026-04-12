@@ -1,5 +1,8 @@
+import CourseCardList from '../components/common/course/CourseCardList';
+import { DUMMY_COURSES } from '../data/courses';
+
 const MyCoursesPage = () => {
-  return <div>My Courses</div>;
+  return <CourseCardList courses={DUMMY_COURSES} />;
 };
 
 export default MyCoursesPage;
