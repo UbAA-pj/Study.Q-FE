@@ -1,7 +1,9 @@
+import { Link } from 'react-router-dom';
+
 const CourseCard = ({ course }) => {
   const imageUrl = `https://picsum.photos/seed/${course.id}/280/200`;
   return (
-    <div className="w-30% max-w-80 h-68 flex flex-col gap-2 cursor-pointer">
+    <Link to="/courses" className="w-30% max-w-80 h-68 flex flex-col gap-2 cursor-pointer">
       <img
         src={imageUrl}
         alt={course.title}
@@ -11,7 +13,7 @@ const CourseCard = ({ course }) => {
         <h3>{course.title}</h3>
         <small>{course.instructor_id}</small>
       </div>
-    </div>
+    </Link>
   );
 };
 

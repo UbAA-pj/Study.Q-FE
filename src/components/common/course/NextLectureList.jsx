@@ -1,12 +1,17 @@
+import { Link } from 'react-router-dom';
+
 const NextLectureItem = ({ lecture, isActive }) => {
   return (
-    <li
-      className={`w-[198px] h-[73px] p-2 rounded-[5px] border overflow-hidden cursor-pointer ${
-        isActive ? 'border-primary' : 'border-base-300'
-      }`}
-    >
-      <p className="truncate">{lecture.title}</p>
-      <span className="block text-xs text-base-200 line-clamp-2">{lecture.description}</span>
+    <li>
+      <Link
+        to={`/courses/${lecture.id}`}
+        className={`block w-[198px] h-[73px] p-2 rounded-[5px] border overflow-hidden cursor-pointer ${
+          isActive ? 'border-primary' : 'border-base-300'
+        }`}
+      >
+        <p className="truncate">{lecture.title}</p>
+        <span className="block text-xs text-base-200 line-clamp-2">{lecture.description}</span>
+      </Link>
     </li>
   );
 };
