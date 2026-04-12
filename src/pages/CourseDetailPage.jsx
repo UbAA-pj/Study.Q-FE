@@ -1,13 +1,30 @@
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import NextLectureList from '../components/common/course/NextLectureList';
-import { DUMMY_LECTURES } from '../data/lectures';
+import api from '../api';
 
 const CourseDetailPage = () => {
   const { id } = useParams();
-  const currentIndex = DUMMY_LECTURES.findIndex((l) => l.id === id);
-  const lecture =
-    currentIndex >= 0 ? DUMMY_LECTURES[currentIndex] : DUMMY_LECTURES[0];
-  const nextLectures = DUMMY_LECTURES.slice(currentIndex + 1);
+  const [lecture, setLecture] = useState(null);
+  const [allLectures, setAllLectures] = useState([]);
+
+  useEffect(() => {
+    api.get(`/api/lectures/${id}`).then((res) => {
+      setLecture(res.data);
+    }).catch((err) => {
+      console.error('강의 상세 조회 실패:', err);
+    });
+
+    api.get('/api/lectures/').then((res) => {
+      setAllLectures(res.data.lectures || []);
+    }).catch((err) => {
+      console.error('강의 목록 조회 실패:', err);
+    });
+  }, [id]);
+
+  if (!lecture) return null;
+
+  const nextLectures = allLectures.filter((l) => l.id !== id);
 
   return (
     <div className="flex justify-between px-8 py-8">

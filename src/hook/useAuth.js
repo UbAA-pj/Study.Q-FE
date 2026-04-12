@@ -27,8 +27,10 @@ const useAuth = () => {
   const deleteAccount = async () => {
     try {
       await api.delete('/api/auth/me');
+
       await signOut(auth);
       clearStorage();
+      
       navigate('/auth/login');
     } catch (err) {
       console.error('회원 탈퇴 실패:', err);
