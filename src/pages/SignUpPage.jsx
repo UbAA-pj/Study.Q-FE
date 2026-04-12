@@ -63,9 +63,9 @@ const SignUpPage = () => {
       });
 
       // 회원가입 후 토큰을 바로 내려주는 경우
-      if (data.accessToken) {
-        localStorage.setItem('accessToken', data.accessToken);
-        localStorage.setItem('refreshToken', data.refreshToken);
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+
         navigate('/');
       } else {
         // 회원가입 후 로그인 페이지로 이동

@@ -45,8 +45,7 @@ const LoginPage = () => {
         role: tab, // student | teacher
       });
 
-      localStorage.setItem('accessToken', data.accessToken);
-      localStorage.setItem('refreshToken', data.refreshToken);
+      localStorage.setItem('token', data.token);
 
       navigate('/');
     } catch (err) {
