@@ -1,8 +1,6 @@
 import CourseSelect from './CourseSelect';
 
-const CreateCourse = ({ value, onChange }) => {
-  const options = ['소프트웨어 공학', '데이터 베이스', '소프트웨어 개발 실습1'];
-
+const CreateCourse = ({ value, selectOptions, onChange }) => {
   const handleChange = (key, newValue) => {
     onChange({
       ...value,
@@ -24,7 +22,7 @@ const CreateCourse = ({ value, onChange }) => {
           <label className="text-xl w-22 whitespace-nowrap">강의 선택:</label>
 
           <CourseSelect
-            options={options}
+            options={selectOptions}
             value={value.category}
             onChange={(val) => handleChange('category', val)}
             placeholder="강의를 선택하세요"

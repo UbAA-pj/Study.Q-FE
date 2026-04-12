@@ -14,6 +14,11 @@ const CreateCoursePage = () => {
     category: '',
     description: '',
   });
+  const selectOptions = [
+    '소프트웨어 공학',
+    '데이터 베이스',
+    '소프트웨어 개발 실습1',
+  ];
 
   const [video, setVideo] = useState(null);
   const [isVideoUploaded, setIsVideoUploaded] = useState(false);
@@ -65,7 +70,11 @@ const CreateCoursePage = () => {
   return (
     <div className="px-8 py-8 flex flex-col gap-4">
       {/* 강의 기본 정보 */}
-      <CreateCourse value={courseData} onChange={setCourseData} />
+      <CreateCourse
+        value={courseData}
+        onChange={setCourseData}
+        selectOptions={selectOptions}
+      />
 
       {/* 영상 업로드 + 퀴즈 생성 */}
       <div className="flex justify-end gap-2">
