@@ -19,6 +19,8 @@ const CreateCoursePage = () => {
   const [isVideoUploaded, setIsVideoUploaded] = useState(false);
   const [previewUrl, setPreviewUrl] = useState('');
 
+  const [quizzes, setQuizzes] = useState([]);
+
   // 미리보기 URL 생성
   useEffect(() => {
     if (!video) return;
@@ -36,6 +38,15 @@ const CreateCoursePage = () => {
     courseData.title.trim() !== '' &&
     courseData.category !== '' &&
     isVideoUploaded;
+
+  const handleGenerateQuiz = async () => {
+    try {
+      // 나중에 API 연결
+      setQuizzes(DUMMY_QUIZZES);
+    } catch (err) {
+      console.error('퀴즈 생성 실패:', err);
+    }
+  };
 
   const handleCreateCourse = async () => {
     try {
@@ -62,7 +73,9 @@ const CreateCoursePage = () => {
           setVideo={setVideo}
           onUploadComplete={() => setIsVideoUploaded(true)}
         />
-        <Button disabled={!isVideoUploaded}>퀴즈 생성</Button>
+        <Button disabled={!isVideoUploaded} onClick={handleGenerateQuiz}>
+          퀴즈 생성
+        </Button>
       </div>
 
       {/* 영상 미리보기 */}
@@ -78,13 +91,14 @@ const CreateCoursePage = () => {
       )}
 
       {/* 퀴즈 리스트 */}
-      {DUMMY_QUIZZES.map((item) => (
-        <QuizBox
-          key={`${item.lectureId}-${item.quizzes.length}`}
-          lectureName={item.lectureName}
-          quizzes={item.quizzes}
-        />
-      ))}
+      {quizzes.length > 0 &&
+        quizzes.map((item) => (
+          <QuizBox
+            key={`${item.lectureId}-${item.quizzes.length}`}
+            lectureName={item.lectureName}
+            quizzes={item.quizzes}
+          />
+        ))}
 
       {/* 에러 메시지 */}
       {!isFormValid && (
