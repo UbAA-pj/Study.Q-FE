@@ -23,7 +23,7 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('role');
-      window.location.href = '/auth/login';
+      window.location.href = '/Study.Q-FE/auth/login';
     }
     return Promise.reject(error);
   }

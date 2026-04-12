@@ -5,6 +5,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 import Button from '../components/common/Button';
 import api from '../api';
+import { ROUTES } from '../constants/routes';
 
 const TABS = [
   { id: 'student', label: '학생으로 로그인' },
@@ -51,7 +52,7 @@ const LoginPage = () => {
       const idToken = await userCredential.user.getIdToken();
 
       // 2. 백엔드 로그인 API 호출 (토큰 + role 응답)
-      const { data } = await api.post('/api/auth/login', {
+      const { data } = await api.post(`/api${ROUTES.LOGIN}`, {
         token: idToken,
         role: tab,
       });
@@ -61,7 +62,9 @@ const LoginPage = () => {
       localStorage.setItem('role', data.role);
 
       // 4. role에 따라 페이지 이동
-      navigate(data.role === 'instructor' ? '/instructor' : '/student');
+      navigate(
+        data.role === 'instructor' ? ROUTES.QUIZ_ANALYTICS : ROUTES.MY_COURSES
+      );
     } catch (err) {
       // Firebase 에러
       if (
@@ -155,7 +158,7 @@ const LoginPage = () => {
         )}
 
         <div className="flex justify-between items-end px-5 py-4">
-          <Link to="/auth/signup" className="text-base-100 hover:underline">
+          <Link to={ROUTES.SIGNUP} className="text-base-100 hover:underline">
             {'< 회원가입 페이지로 이동'}
           </Link>
           <Button variant="primary" onClick={handleSubmit} disabled={isLoading}>

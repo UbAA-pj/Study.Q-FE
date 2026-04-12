@@ -3,6 +3,7 @@ import { Settings } from 'lucide-react';
 import { useState } from 'react';
 import useAuth from '../../hook/useAuth';
 import DeleteAccountModal from './DeleteAccountModal';
+import { ROUTES } from '../../constants/routes';
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -38,57 +39,59 @@ export default function Header() {
       <Link to="/">
         <h1 className="text-logo">Study.Q</h1>
       </Link>
-      <nav className="flex items-center gap-2">
-        {role === 'student' && (
-          <>
-            <Link to="/my-courses">
-              <h4 className={linkStyle}>수강 목록</h4>
-            </Link>
-            <Link to="/mistake-notes">
-              <h4 className={linkStyle}>오답 노트</h4>
-            </Link>
-          </>
-        )}
-
-        {role === 'instructor' && (
-          <>
-            <Link to="/create-course">
-              <h4 className={linkStyle}>강의 생성</h4>
-            </Link>
-            <Link to="/my-courses">
-              <h4 className={linkStyle}>강의 목록</h4>
-            </Link>
-            <Link to="/quiz-analytics">
-              <h4 className={linkStyle}>퀴즈 통계</h4>
-            </Link>
-          </>
-        )}
-        <button
-          onClick={() => setOpen((prev) => !prev)}
-          className={`relative ${open ? openStyle : linkStyle}`}
-        >
-          <Settings size={22} />
-          {open && (
-            <div className="absolute top-full right-0 mt-2 w-22 bg-white border border-base-300 rounded-md shadow-lg">
-              <button
-                onClick={logout}
-                className="p-3 cursor-pointer hover:bg-base-300/30"
-              >
-                로그아웃
-              </button>
-              <button
-                onClick={() => {
-                  setErrorMsg('');
-                  setIsModalOpen(true);
-                }}
-                className="text-red-400 p-3 cursor-pointer hover:bg-base-300/30"
-              >
-                회원 탈퇴
-              </button>
-            </div>
+      {localStorage.getItem('token') && (
+        <nav className="flex items-center gap-2">
+          {role === 'student' && (
+            <>
+              <Link to={ROUTES.MY_COURSES}>
+                <h4 className={linkStyle}>수강 목록</h4>
+              </Link>
+              <Link to={ROUTES.MISTAKE_NOTES}>
+                <h4 className={linkStyle}>오답 노트</h4>
+              </Link>
+            </>
           )}
-        </button>
-      </nav>
+
+          {role === 'instructor' && (
+            <>
+              <Link to={ROUTES.CREATE_COURSE}>
+                <h4 className={linkStyle}>강의 생성</h4>
+              </Link>
+              <Link to={ROUTES.MY_COURSES}>
+                <h4 className={linkStyle}>강의 목록</h4>
+              </Link>
+              <Link to={ROUTES.QUIZ_ANALYTICS}>
+                <h4 className={linkStyle}>퀴즈 통계</h4>
+              </Link>
+            </>
+          )}
+          <button
+            onClick={() => setOpen((prev) => !prev)}
+            className={`relative ${open ? openStyle : linkStyle}`}
+          >
+            <Settings size={22} />
+            {open && (
+              <div className="absolute top-full right-0 mt-2 w-22 bg-white border border-base-300 rounded-md shadow-lg">
+                <button
+                  onClick={logout}
+                  className="p-3 cursor-pointer hover:bg-base-300/30"
+                >
+                  로그아웃
+                </button>
+                <button
+                  onClick={() => {
+                    setErrorMsg('');
+                    setIsModalOpen(true);
+                  }}
+                  className="text-red-400 p-3 cursor-pointer hover:bg-base-300/30"
+                >
+                  회원 탈퇴
+                </button>
+              </div>
+            )}
+          </button>
+        </nav>
+      )}
       <DeleteAccountModal
         isOpen={isModalOpen}
         onConfirm={handleDeleteConfirm}

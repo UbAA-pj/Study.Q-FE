@@ -5,6 +5,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 import Button from '../components/common/Button';
 import api from '../api';
+import { ROUTES } from '../constants/routes';
 
 const TABS = [
   { id: 'student', label: '학생으로 회원가입' },
@@ -69,7 +70,7 @@ const SignUpPage = () => {
       const idToken = await userCredential.user.getIdToken();
 
       // 2. 백엔드 회원가입 API 호출
-      await api.post('/api/auth/signup', {
+      await api.post(`/api${ROUTES.SIGNUP}`, {
         token: idToken,
         username: form.username,
         name: form.name,
@@ -77,7 +78,7 @@ const SignUpPage = () => {
       });
 
       // 3. 회원가입 후 로그인 페이지로 이동
-      navigate('/auth/login');
+      navigate(ROUTES.LOGIN);
     } catch (err) {
       // Firebase 에러
       if (err.code === 'auth/email-already-in-use') {
@@ -204,7 +205,7 @@ const SignUpPage = () => {
         )}
 
         <div className="flex justify-between items-end px-5 py-4">
-          <Link to="/auth/login" className="text-base-100 hover:underline">
+          <Link to={ROUTES.LOGIN} className="text-base-100 hover:underline">
             {'< 로그인 페이지로 이동'}
           </Link>
           <Button variant="primary" onClick={handleSubmit} disabled={isLoading}>
