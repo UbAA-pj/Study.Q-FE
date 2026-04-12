@@ -18,7 +18,7 @@ const useAuth = () => {
   // 회원 탈퇴
   const deleteAccount = async () => {
     try {
-      await api.delete('/api/users/me');
+      await api.delete('/api/auth/me');
       clearTokens();
       navigate('/auth/login');
     } catch (err) {
