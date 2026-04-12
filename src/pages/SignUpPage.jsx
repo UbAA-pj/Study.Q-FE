@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebase';
 import Button from '../components/common/Button';
 import api from '../api';
 
 const TABS = [
   { id: 'student', label: '학생으로 회원가입' },
-  { id: 'teacher', label: '강사로 회원가입' },
+  { id: 'instructor', label: '강사로 회원가입' },
 ];
 
 const SignUpPage = () => {
@@ -16,8 +18,8 @@ const SignUpPage = () => {
   const [form, setForm] = useState({
     email: '',
     password: '',
-    userId: '',
-    nickname: '',
+    username: '',
+    name: '',
   });
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState('');
@@ -41,11 +43,12 @@ const SignUpPage = () => {
     if (!passwordRegex.test(form.password))
       newErrors.password = '8자 이상, 영문/숫자/특수문자 포함';
 
-    const userIdRegex = /^[a-zA-Z0-9]{4,10}$/;
-    if (!userIdRegex.test(form.userId)) newErrors.userId = '영문, 숫자 4~10자';
+    const usernameRegex = /^[a-zA-Z0-9]{4,10}$/;
+    if (!usernameRegex.test(form.username))
+      newErrors.username = '영문, 숫자 4~10자';
 
-    const nicknameRegex = /^[a-zA-Z0-9가-힣]{2,10}$/;
-    if (!nicknameRegex.test(form.nickname)) newErrors.nickname = '2~10자 입력';
+    const nameRegex = /^[a-zA-Z0-9가-힣]{2,10}$/;
+    if (!nameRegex.test(form.name)) newErrors.name = '2~10자 입력';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -57,28 +60,39 @@ const SignUpPage = () => {
     setServerError('');
 
     try {
-      const { data } = await api.post('/api/auth/signup', {
-        ...form,
-        role: tab, // student | teacher
+      // 1. Firebase SDK로 회원가입 → ID Token 자동 발급
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        form.email,
+        form.password
+      );
+      const idToken = await userCredential.user.getIdToken();
+
+      // 2. 백엔드 회원가입 API 호출
+      await api.post('/api/auth/signup', {
+        token: idToken,
+        username: form.username,
+        name: form.name,
+        role: tab,
       });
 
-      // 회원가입 후 토큰을 바로 내려주는 경우
-      if (data.accessToken) {
-        localStorage.setItem('accessToken', data.accessToken);
-        localStorage.setItem('refreshToken', data.refreshToken);
-        navigate('/');
-      } else {
-        // 회원가입 후 로그인 페이지로 이동
-        navigate('/auth/login');
-      }
+      // 3. 회원가입 후 로그인 페이지로 이동
+      navigate('/auth/login');
     } catch (err) {
-      const message = err.response?.data?.message;
-      if (err.response?.status === 409) {
-        setServerError('이미 사용 중인 이메일 또는 아이디입니다.');
+      // Firebase 에러
+      if (err.code === 'auth/email-already-in-use') {
+        setServerError('이미 사용 중인 이메일입니다.');
+      } else if (err.code === 'auth/weak-password') {
+        setServerError('비밀번호가 너무 약합니다.');
       } else {
-        setServerError(
-          message || '회원가입에 실패했습니다. 다시 시도해주세요.'
-        );
+        const message = err.response?.data?.message;
+        if (err.response?.status === 409) {
+          setServerError('이미 사용 중인 이메일 또는 아이디입니다.');
+        } else {
+          setServerError(
+            message || '회원가입에 실패했습니다. 다시 시도해주세요.'
+          );
+        }
       }
     } finally {
       setIsLoading(false);
@@ -155,32 +169,32 @@ const SignUpPage = () => {
           <p className="w-full text-base-100">user ID</p>
           <div className="w-140 h-10 border-b border-base-300">
             <input
-              name="userId"
+              name="username"
               type="text"
-              value={form.userId}
+              value={form.username}
               onChange={handleChange}
               placeholder="영문, 숫자 4~10자"
               className="w-full h-10 focus:outline-none focus:ring-0"
             />
           </div>
-          {errors.userId && (
-            <p className="text-red-400 text-sm mt-1">{errors.userId}</p>
+          {errors.username && (
+            <p className="text-red-400 text-sm mt-1">{errors.username}</p>
           )}
         </div>
 
-        {/* 닉네임 */}
+        {/* 이름 */}
         <div className="px-10 py-4">
-          <p className="w-full text-base-100">Nickname</p>
+          <p className="w-full text-base-100">name</p>
           <input
-            name="nickname"
+            name="name"
             type="text"
-            value={form.nickname}
+            value={form.name}
             onChange={handleChange}
-            placeholder="닉네임을 입력해주세요."
+            placeholder="이름을 입력해주세요."
             className="w-140 h-10 border-b border-base-300 focus:outline-none focus:ring-0"
           />
-          {errors.nickname && (
-            <p className="text-red-400 text-sm mt-1">{errors.nickname}</p>
+          {errors.name && (
+            <p className="text-red-400 text-sm mt-1">{errors.name}</p>
           )}
         </div>
 

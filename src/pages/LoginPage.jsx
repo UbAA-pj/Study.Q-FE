@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebase';
 import Button from '../components/common/Button';
 import api from '../api';
 
 const TABS = [
   { id: 'student', label: '학생으로 로그인' },
-  { id: 'teacher', label: '강사로 로그인' },
+  { id: 'instructor', label: '강사로 로그인' },
 ];
 
 const LoginPage = () => {
@@ -40,20 +42,40 @@ const LoginPage = () => {
     setServerError('');
 
     try {
+      // 1. Firebase SDK로 로그인 → ID Token 자동 발급
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        form.email,
+        form.password
+      );
+      const idToken = await userCredential.user.getIdToken();
+
+      // 2. 백엔드 로그인 API 호출 (토큰 + role 응답)
       const { data } = await api.post('/api/auth/login', {
-        ...form,
-        role: tab, // student | teacher
+        token: idToken,
+        role: tab,
       });
 
-      localStorage.setItem('accessToken', data.accessToken);
-      localStorage.setItem('refreshToken', data.refreshToken);
+      // 3. 토큰 + role 저장
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('role', data.role);
 
-      navigate('/');
+      // 4. role에 따라 페이지 이동
+      navigate(data.role === 'instructor' ? '/instructor' : '/student');
     } catch (err) {
-      const message = err.response?.data?.message;
-      if (err.response?.status === 401) {
+      // Firebase 에러
+      if (
+        err.code === 'auth/user-not-found' ||
+        err.code === 'auth/wrong-password' ||
+        err.code === 'auth/invalid-credential'
+      ) {
         setServerError('이메일 또는 비밀번호가 올바르지 않습니다.');
+      } else if (err.code === 'auth/too-many-requests') {
+        setServerError(
+          '로그인 시도가 너무 많습니다. 잠시 후 다시 시도해주세요.'
+        );
       } else {
+        const message = err.response?.data?.message;
         setServerError(message || '로그인에 실패했습니다. 다시 시도해주세요.');
       }
     } finally {
