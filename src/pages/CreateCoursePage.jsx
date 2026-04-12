@@ -82,7 +82,11 @@ const CreateCoursePage = () => {
           setVideo={setVideo}
           onUploadComplete={() => setIsVideoUploaded(true)}
         />
-        <Button disabled={!isVideoUploaded} onClick={handleGenerateQuiz}>
+        <Button
+          variant="primary"
+          disabled={!isVideoUploaded}
+          onClick={handleGenerateQuiz}
+        >
           퀴즈 생성
         </Button>
       </div>
