@@ -2,6 +2,7 @@ export const DUMMY_QUIZZES = [
   {
     lectureId: 1,
     lectureName: '1강. HTML이란?',
+    category: '소프트웨어 개발 실습',
     quizzes: [
       {
         id: 'quiz_01',
@@ -38,6 +39,7 @@ export const DUMMY_QUIZZES = [
   {
     lectureId: 2,
     lectureName: '2강. CSS 기초',
+    category: '소프트웨어 개발 실습',
     quizzes: [
       {
         id: 'quiz_04',
