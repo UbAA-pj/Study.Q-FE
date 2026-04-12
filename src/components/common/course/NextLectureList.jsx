@@ -5,12 +5,12 @@ const NextLectureItem = ({ lecture, isActive }) => {
     <li>
       <Link
         to={`/courses/${lecture.id}`}
-        className={`block w-[198px] h-[73px] p-2 rounded-[5px] border overflow-hidden cursor-pointer ${
+        className={`flex flex-col w-[198px] h-[73px] p-2 rounded-[5px] border cursor-pointer ${
           isActive ? 'border-primary' : 'border-base-300'
         }`}
       >
-        <p className="truncate">{lecture.title}</p>
-        <span className="block text-xs text-base-200 line-clamp-2">{lecture.description}</span>
+        <p className="truncate shrink-0">{lecture.title}</p>
+        <span className="text-xs text-base-200 line-clamp-2 min-h-0">{lecture.description}</span>
       </Link>
     </li>
   );
