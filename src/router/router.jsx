@@ -68,4 +68,4 @@ export const Router = createBrowserRouter([
       },
     ],
   },
-]);
+], { basename: '/Study.Q-FE' });
