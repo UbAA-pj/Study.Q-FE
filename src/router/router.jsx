@@ -1,4 +1,5 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { ROUTES } from '../constants/routes';
 import MainLayout from '../Layout/MainLayout';
 import MainPage from '../pages/MainPage';
 import LoginPage from '../pages/LoginPage';
@@ -11,61 +12,116 @@ import CreateCoursePage from '../pages/CreateCoursePage';
 import EditCoursePage from '../pages/EditCoursePage';
 import QuizAnalyticsPage from '../pages/QuizAnalyticsPage';
 
-export const Router = createBrowserRouter([
-  {
-    element: <MainLayout />,
-    handle: { breadcrumb: 'Study.Q' },
-    children: [
-      { 
-        path: '/', 
-        element: <MainPage />,
-        handle: { hideBreadcrumb: true }
-      },
-      {
-        path: '/auth/login',
-        element: <LoginPage />,
-        handle: { hideBreadcrumb: true },
-      },
-      {
-        path: '/auth/signup',
-        element: <SignUpPage />,
-        handle: { hideBreadcrumb: true },
-      },
-      {
-        path: '/my-courses',
-        element: <MyCoursesPage />,
-        handle: { breadcrumb: '수강 목록' },
-      },
-      {
-        path: '/courses',
-        element: <CourseCatalogPage />,
-        handle: { breadcrumb: '강의 목록' },
-      },
-      {
-        path: '/courses/:id',
-        element: <CourseDetailPage />,
-        handle: { breadcrumb: '강의 상세' },
-      },
-      {
-        path: '/mistake-notes',
-        element: <MistakeNotesPage />,
-        handle: { breadcrumb: '오답 노트' },
-      },
-      {
-        path: '/create-course',
-        element: <CreateCoursePage />,
-        handle: { breadcrumb: '강의 추가' },
-      },
-      {
-        path: '/courses/:id/edit',
-        element: <EditCoursePage />,
-        handle: { breadcrumb: '강의 수정' },
-      },
-      {
-        path: '/quiz-analytics',
-        element: <QuizAnalyticsPage />,
-        handle: { breadcrumb: '퀴즈 통계' },
-      },
-    ],
-  },
-], { basename: '/Study.Q-FE' });
+// 로그인 여부 체크
+const PrivateRoute = ({ children }) => {
+  const token = localStorage.getItem('token');
+  return token ? children : <Navigate to={ROUTES.LOGIN} replace />;
+};
+
+// role 체크 (로그인 + 권한)
+const RoleRoute = ({ role, children }) => {
+  const token = localStorage.getItem('token');
+  const userRole = localStorage.getItem('role');
+
+  if (!token) return <Navigate to={ROUTES.LOGIN} replace />;
+  if (userRole !== role) return <Navigate to={ROUTES.MAIN} replace />;
+  return children;
+};
+
+export const Router = createBrowserRouter(
+  [
+    {
+      element: <MainLayout />,
+      handle: { breadcrumb: 'Study.Q' },
+      children: [
+        {
+          path: ROUTES.MAIN,
+          element: <MainPage />,
+          handle: { hideBreadcrumb: true },
+        },
+
+        // 인증
+        {
+          path: ROUTES.LOGIN,
+          element: <LoginPage />,
+          handle: { hideBreadcrumb: true },
+        },
+        {
+          path: ROUTES.SIGNUP,
+          element: <SignUpPage />,
+          handle: { hideBreadcrumb: true },
+        },
+
+        // 공통 (로그인 필요)
+        {
+          path: ROUTES.COURSES,
+          element: (
+            <PrivateRoute>
+              <CourseCatalogPage />
+            </PrivateRoute>
+          ),
+          handle: { breadcrumb: '강의 목록' },
+        },
+        {
+          path: ROUTES.COURSE_DETAIL(),
+          element: (
+            <PrivateRoute>
+              <CourseDetailPage />
+            </PrivateRoute>
+          ),
+          handle: { breadcrumb: '강의 상세' },
+        },
+
+        // 학생 전용
+        {
+          path: ROUTES.MY_COURSES,
+          element: (
+            <RoleRoute role="student">
+              <MyCoursesPage />
+            </RoleRoute>
+          ),
+          handle: { breadcrumb: '수강 목록' },
+        },
+        {
+          path: ROUTES.MISTAKE_NOTES,
+          element: (
+            <RoleRoute role="student">
+              <MistakeNotesPage />
+            </RoleRoute>
+          ),
+          handle: { breadcrumb: '오답 노트' },
+        },
+
+        // 강사 전용
+        {
+          path: ROUTES.CREATE_COURSE,
+          element: (
+            <RoleRoute role="instructor">
+              <CreateCoursePage />
+            </RoleRoute>
+          ),
+          handle: { breadcrumb: '강의 추가' },
+        },
+        {
+          path: ROUTES.EDIT_COURSE(),
+          element: (
+            <RoleRoute role="instructor">
+              <EditCoursePage />
+            </RoleRoute>
+          ),
+          handle: { breadcrumb: '강의 수정' },
+        },
+        {
+          path: ROUTES.QUIZ_ANALYTICS,
+          element: (
+            <RoleRoute role="instructor">
+              <QuizAnalyticsPage />
+            </RoleRoute>
+          ),
+          handle: { breadcrumb: '퀴즈 통계' },
+        },
+      ],
+    },
+  ],
+  { basename: '/Study.Q-FE' }
+);
