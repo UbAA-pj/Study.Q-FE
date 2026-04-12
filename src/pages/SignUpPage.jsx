@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '../components/common/Button';
-import { Link } from 'react-router-dom';
+import api from '../api';
 
 const TABS = [
   { id: 'student', label: '학생으로 회원가입' },
@@ -9,6 +10,7 @@ const TABS = [
 ];
 
 const SignUpPage = () => {
+  const navigate = useNavigate();
   const [tab, setTab] = useState('student');
   const [showPw, setShowPw] = useState(false);
   const [form, setForm] = useState({
@@ -17,11 +19,14 @@ const SignUpPage = () => {
     userId: '',
     nickname: '',
   });
-
   const [errors, setErrors] = useState({});
+  const [serverError, setServerError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: '' });
+    setServerError('');
   };
 
   const validate = () => {
@@ -46,9 +51,38 @@ const SignUpPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!validate()) return;
-    // API 호출
+    setIsLoading(true);
+    setServerError('');
+
+    try {
+      const { data } = await api.post('/api/auth/signup', {
+        ...form,
+        role: tab, // student | teacher
+      });
+
+      // 회원가입 후 토큰을 바로 내려주는 경우
+      if (data.accessToken) {
+        localStorage.setItem('accessToken', data.accessToken);
+        localStorage.setItem('refreshToken', data.refreshToken);
+        navigate('/');
+      } else {
+        // 회원가입 후 로그인 페이지로 이동
+        navigate('/auth/login');
+      }
+    } catch (err) {
+      const message = err.response?.data?.message;
+      if (err.response?.status === 409) {
+        setServerError('이미 사용 중인 이메일 또는 아이디입니다.');
+      } else {
+        setServerError(
+          message || '회원가입에 실패했습니다. 다시 시도해주세요.'
+        );
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -60,10 +94,12 @@ const SignUpPage = () => {
             <button
               key={id}
               onClick={() => setTab(id)}
-              className={`w-80 relative px-5 py-2 flex items-center justify-center border-b-3 ${isActive ? 'border-primary' : 'border-transparent'}`}
+              className={`w-80 relative px-5 py-2 flex items-center justify-center border-b-3 ${
+                isActive ? 'border-primary' : 'border-transparent'
+              }`}
             >
               <span
-                className={`px-3 py-1 rounded-full transition-colors text-base-100 ${
+                className={`px-3 py-1 rounded-full transition-colors ${
                   isActive
                     ? 'bg-primary/10 text-primary'
                     : 'text-base-content/70 hover:bg-primary/5'
@@ -75,7 +111,9 @@ const SignUpPage = () => {
           );
         })}
       </div>
+
       <div className="border border-base-300 rounded-sm py-10">
+        {/* 이메일 */}
         <div className="px-10 py-4">
           <p className="w-full text-base-100">e-mail</p>
           <input
@@ -86,27 +124,33 @@ const SignUpPage = () => {
             placeholder="이메일을 입력해주세요."
             className="w-140 h-10 border-b border-base-300 focus:outline-none focus:ring-0"
           />
-          {errors.email && <p className="text-red-400">{errors.email}</p>}
+          {errors.email && (
+            <p className="text-red-400 text-sm mt-1">{errors.email}</p>
+          )}
         </div>
 
+        {/* 비밀번호 */}
         <div className="px-10 py-4">
           <p className="w-full text-base-100">pw</p>
-          <div className="w-140 h-10 border-b border-base-300">
+          <div className="w-140 h-10 border-b border-base-300 flex items-center">
             <input
               name="password"
               type={showPw ? 'text' : 'password'}
               value={form.password}
               onChange={handleChange}
               placeholder="비밀번호를 입력해주세요."
-              className="w-134 h-10 focus:outline-none focus:ring-0"
+              className="flex-1 h-10 focus:outline-none focus:ring-0"
             />
-            <button onClick={() => setShowPw((v) => !v)}>
+            <button type="button" onClick={() => setShowPw((v) => !v)}>
               {showPw ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
-          {errors.password && <p className="text-red-400">{errors.password}</p>}
+          {errors.password && (
+            <p className="text-red-400 text-sm mt-1">{errors.password}</p>
+          )}
         </div>
 
+        {/* 유저 ID */}
         <div className="px-10 py-4">
           <p className="w-full text-base-100">user ID</p>
           <div className="w-140 h-10 border-b border-base-300">
@@ -116,12 +160,15 @@ const SignUpPage = () => {
               value={form.userId}
               onChange={handleChange}
               placeholder="영문, 숫자 4~10자"
-              className="w-134 h-10 focus:outline-none focus:ring-0"
+              className="w-full h-10 focus:outline-none focus:ring-0"
             />
           </div>
-          {errors.userId && <p className="text-red-400">{errors.userId}</p>}
+          {errors.userId && (
+            <p className="text-red-400 text-sm mt-1">{errors.userId}</p>
+          )}
         </div>
 
+        {/* 닉네임 */}
         <div className="px-10 py-4">
           <p className="w-full text-base-100">Nickname</p>
           <input
@@ -132,15 +179,22 @@ const SignUpPage = () => {
             placeholder="닉네임을 입력해주세요."
             className="w-140 h-10 border-b border-base-300 focus:outline-none focus:ring-0"
           />
-          {errors.nickname && <p className="text-red-400">{errors.nickname}</p>}
+          {errors.nickname && (
+            <p className="text-red-400 text-sm mt-1">{errors.nickname}</p>
+          )}
         </div>
+
+        {/* 서버 에러 */}
+        {serverError && (
+          <p className="text-red-400 text-sm px-10">{serverError}</p>
+        )}
 
         <div className="flex justify-between items-end px-5 py-4">
           <Link to="/auth/login" className="text-base-100 hover:underline">
-            {`< 로그인 페이지로 이동`}
+            {'< 로그인 페이지로 이동'}
           </Link>
-          <Button variant="primary" onClick={handleSubmit}>
-            회원가입
+          <Button variant="primary" onClick={handleSubmit} disabled={isLoading}>
+            {isLoading ? '처리 중...' : '회원가입'}
           </Button>
         </div>
       </div>
