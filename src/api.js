@@ -7,11 +7,11 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// 요청마다 Firebase ID Token 자동 주입
+// 요청마다 token 자동 주입
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers.Authorization = token;
   }
   return config;
 });
@@ -22,6 +22,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
+      localStorage.removeItem('role');
       window.location.href = '/auth/login';
     }
     return Promise.reject(error);
