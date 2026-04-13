@@ -4,27 +4,27 @@ import NextLectureList from '../components/common/course/NextLectureList';
 import api from '../api';
 
 const CourseDetailPage = () => {
-  const { id } = useParams();
+  const { courseId, lectureId } = useParams();
   const [lecture, setLecture] = useState(null);
   const [allLectures, setAllLectures] = useState([]);
 
   useEffect(() => {
-    api.get(`/api/lectures/${id}`).then((res) => {
+    api.get(`/api/lectures/${lectureId}`).then((res) => {
       setLecture(res.data);
     }).catch((err) => {
       console.error('강의 상세 조회 실패:', err);
     });
 
-    api.get('/api/lectures/').then((res) => {
+    api.get(`/api/courses/${courseId}`).then((res) => {
       setAllLectures(res.data.lectures || []);
     }).catch((err) => {
       console.error('강의 목록 조회 실패:', err);
     });
-  }, [id]);
+  }, [courseId, lectureId]);
 
   if (!lecture) return null;
 
-  const nextLectures = allLectures.filter((l) => l.id !== id);
+  const nextLectures = allLectures.filter((l) => l.id !== lectureId);
 
   return (
     <div className="flex justify-between px-8 py-8">

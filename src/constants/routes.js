@@ -7,6 +7,8 @@ export const ROUTES = {
   MAIN: '/',
   COURSES: '/courses',
   COURSE_DETAIL: (id = ':id') => `/courses/${id}`,
+  LECTURE_DETAIL: (courseId = ':courseId', lectureId = ':lectureId') =>
+    `/courses/${courseId}/lectures/${lectureId}`,
 
   // 학생 전용
   MY_COURSES: '/my-courses',

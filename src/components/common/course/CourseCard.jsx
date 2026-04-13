@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 const CourseCard = ({ course }) => {
   const imageUrl = `https://picsum.photos/seed/${course.id}/280/200`;
   return (
-    <Link to="/courses" className="w-30% max-w-80 h-68 flex flex-col gap-2 cursor-pointer">
+    <Link to={`/courses/${course.id}`} className="w-30% max-w-80 h-68 flex flex-col gap-2 cursor-pointer">
       <img
         src={imageUrl}
         alt={course.course_name}

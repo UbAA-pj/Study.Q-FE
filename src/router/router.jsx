@@ -53,16 +53,16 @@ export const Router = createBrowserRouter(
 
         // 공통 (로그인 필요)
         {
-          path: ROUTES.COURSES,
+          path: ROUTES.COURSE_DETAIL(),
           element: (
             <PrivateRoute>
-              <CourseDetailPage />
+              <CourseCatalogPage />
             </PrivateRoute>
           ),
           handle: { breadcrumb: '강의 목록' },
         },
         {
-          path: ROUTES.COURSE_DETAIL(),
+          path: ROUTES.LECTURE_DETAIL(),
           element: (
             <PrivateRoute>
               <CourseDetailPage />
