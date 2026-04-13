@@ -17,6 +17,7 @@ const CreateCoursePage = () => {
     description: '',
   });
   const [selectOptions, setSelectOptions] = useState([]);
+  const [coursesData, setCoursesData] = useState([]);
 
   useEffect(() => {
     api.get('/api/courses/').then((res) => {
@@ -25,6 +26,7 @@ const CreateCoursePage = () => {
       const myCourses = uid
         ? courses.filter((c) => c.instructor_id === uid)
         : courses;
+      setCoursesData(myCourses);
       setSelectOptions(myCourses.map((c) => c.course_name));
     }).catch((err) => {
       console.error('강좌 목록 조회 실패:', err);
@@ -66,10 +68,19 @@ const CreateCoursePage = () => {
 
   const handleCreateCourse = async () => {
     try {
-      //  API 연결
-      console.log('강의 생성 데이터:', {
-        courseData,
-        video,
+      // 선택한 강좌에서 course_id 찾기
+      const selectedCourse = coursesData.find((c) => c.course_name === courseData.category);
+
+      const formData = new FormData();
+      formData.append('course_id', selectedCourse?.id || '');
+      formData.append('title', courseData.title);
+      formData.append('order', 1);
+      formData.append('category', courseData.category);
+      formData.append('description', courseData.description);
+      formData.append('video', video);
+
+      await api.post('/api/lectures/', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
 
       navigate('/');
