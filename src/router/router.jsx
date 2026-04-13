@@ -9,7 +9,6 @@ import CourseCatalogPage from '../pages/CourseCatalogPage';
 import CourseDetailPage from '../pages/CourseDetailPage';
 import MistakeNotesPage from '../pages/MistakeNotesPage';
 import CreateCoursePage from '../pages/CreateCoursePage';
-import EditCoursePage from '../pages/EditCoursePage';
 import QuizAnalyticsPage from '../pages/QuizAnalyticsPage';
 
 // 로그인 여부 체크
@@ -57,7 +56,7 @@ export const Router = createBrowserRouter(
           path: ROUTES.COURSES,
           element: (
             <PrivateRoute>
-              <CourseCatalogPage />
+              <CourseDetailPage />
             </PrivateRoute>
           ),
           handle: { breadcrumb: '강의 목록' },
@@ -101,15 +100,6 @@ export const Router = createBrowserRouter(
             </RoleRoute>
           ),
           handle: { breadcrumb: '강의 추가' },
-        },
-        {
-          path: ROUTES.EDIT_COURSE(),
-          element: (
-            <RoleRoute role="instructor">
-              <EditCoursePage />
-            </RoleRoute>
-          ),
-          handle: { breadcrumb: '강의 수정' },
         },
         {
           path: ROUTES.QUIZ_ANALYTICS,
