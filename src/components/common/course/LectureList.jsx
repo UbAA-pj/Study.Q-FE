@@ -1,10 +1,10 @@
 import { Pencil, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const LectureItem = ({ lecture }) => {
+const LectureItem = ({ lecture, courseId }) => {
   return (
     <li className="hover:bg-base-300/30 rounded-xl">
-      <Link to={`/courses/${lecture.id}`} className="flex items-center justify-between">
+      <Link to={`/courses/${courseId}/lectures/${lecture.id}`} className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <video
             src={lecture.video_url}
@@ -30,11 +30,11 @@ const LectureItem = ({ lecture }) => {
   );
 };
 
-const LectureList = ({ lectures }) => {
+const LectureList = ({ lectures, courseId }) => {
   return (
     <ul className="px-5 py-5 flex flex-col gap-6">
       {lectures.map((lecture) => (
-        <LectureItem key={lecture.id} lecture={lecture} />
+        <LectureItem key={lecture.id} lecture={lecture} courseId={courseId} />
       ))}
     </ul>
   );

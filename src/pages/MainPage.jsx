@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import CourseCategoryTabs from '../components/common/course/CourseCategoryTabs';
 import CourseCardList from '../components/common/course/CourseCardList';
 import api from '../api';
+import { auth } from '../firebase';
 
 const MainPage = () => {
   const [courses, setCourses] = useState([]);
@@ -9,7 +10,9 @@ const MainPage = () => {
 
   useEffect(() => {
     api.get('/api/courses/').then((res) => {
-      setCourses(res.data.courses || []);
+      const allCourses = res.data.courses || [];
+      const uid = auth.currentUser?.uid;
+      setCourses(uid ? allCourses.filter((c) => c.instructor_id === uid) : allCourses);
     }).catch((err) => {
       console.error('강좌 목록 조회 실패:', err);
     });
