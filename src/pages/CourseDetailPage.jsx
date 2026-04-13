@@ -50,7 +50,7 @@ const CourseDetailPage = () => {
   const rawQuizzes = lecture.quizzes && lecture.quizzes.length > 0 ? lecture.quizzes : MOCK_QUIZZES;
   const quizzes = rawQuizzes.map((q, i) => ({
     ...q,
-    trigger_time: q.trigger_time != null ? q.trigger_time : (i + 1) * 5,
+    trigger_time: (i + 1) * 3, // 테스트용: 3초 간격
   }));
   const videoUrl = lecture.video_url?.startsWith('http')
     ? lecture.video_url
