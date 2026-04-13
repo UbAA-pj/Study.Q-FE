@@ -72,7 +72,7 @@ const CreateCoursePage = () => {
         video,
       });
 
-      navigate('/courses');
+      navigate('/');
     } catch (err) {
       console.error('강의 생성 실패:', err);
     }
