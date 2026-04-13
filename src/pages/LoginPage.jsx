@@ -61,10 +61,8 @@ const LoginPage = () => {
       localStorage.setItem('token', data.token);
       localStorage.setItem('role', data.role);
 
-      // 4. role에 따라 페이지 이동
-      navigate(
-        data.role === 'instructor' ? ROUTES.QUIZ_ANALYTICS : ROUTES.MY_COURSES
-      );
+      // 4. 메인 페이지로 이동
+      navigate(ROUTES.MAIN);
     } catch (err) {
       // Firebase 에러
       if (
