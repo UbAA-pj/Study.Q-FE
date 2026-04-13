@@ -8,10 +8,10 @@ const MainPage = () => {
   const [activeTab, setActiveTab] = useState('전체');
 
   useEffect(() => {
-    api.get('/api/lectures/').then((res) => {
-      setCourses(res.data.lectures || []);
+    api.get('/api/courses/').then((res) => {
+      setCourses(res.data.courses || []);
     }).catch((err) => {
-      console.error('강의 목록 조회 실패:', err);
+      console.error('강좌 목록 조회 실패:', err);
     });
   }, []);
 

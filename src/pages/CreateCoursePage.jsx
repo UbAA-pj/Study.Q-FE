@@ -5,6 +5,8 @@ import QuizBox from '../components/common/QuizBox';
 import { DUMMY_QUIZZES } from '../data/quizzes';
 import VideoUpload from '../components/common/createCourse/VideoUpload.jsx';
 import { useNavigate } from 'react-router-dom';
+import api from '../api';
+import { auth } from '../firebase';
 
 const CreateCoursePage = () => {
   const navigate = useNavigate();
@@ -14,11 +16,20 @@ const CreateCoursePage = () => {
     category: '',
     description: '',
   });
-  const selectOptions = [
-    '소프트웨어 공학',
-    '데이터 베이스',
-    '소프트웨어 개발 실습1',
-  ];
+  const [selectOptions, setSelectOptions] = useState([]);
+
+  useEffect(() => {
+    api.get('/api/courses/').then((res) => {
+      const courses = res.data.courses || [];
+      const uid = auth.currentUser?.uid;
+      const myCourses = uid
+        ? courses.filter((c) => c.instructor_id === uid)
+        : courses;
+      setSelectOptions(myCourses.map((c) => c.course_name));
+    }).catch((err) => {
+      console.error('강좌 목록 조회 실패:', err);
+    });
+  }, []);
 
   const [video, setVideo] = useState(null);
   const [isVideoUploaded, setIsVideoUploaded] = useState(false);

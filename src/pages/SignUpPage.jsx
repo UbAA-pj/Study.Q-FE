@@ -77,8 +77,10 @@ const SignUpPage = () => {
         role: tab,
       });
 
-      // 3. 회원가입 후 로그인 페이지로 이동
-      navigate(ROUTES.LOGIN);
+      // 3. 로그인 처리 + 메인으로 이동
+      localStorage.setItem('token', idToken);
+      localStorage.setItem('role', tab);
+      navigate(ROUTES.MAIN);
     } catch (err) {
       // Firebase 에러
       if (err.code === 'auth/email-already-in-use') {
