@@ -12,8 +12,7 @@ export default function Header() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  const user = { role: 'student' };
-  const role = user?.role;
+  const role = localStorage.getItem('role');
   const linkStyle =
     'px-2 py-2 cursor-pointer hover:bg-base-300/40 rounded-full ';
   const openStyle = 'px-2 py-2 cursor-pointer bg-base-300/40 rounded-full ';
